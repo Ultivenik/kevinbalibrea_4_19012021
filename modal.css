@@ -188,6 +188,10 @@ input {
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
+.messageApproved{
+  margin: 78% 0;
+  text-align: center;
+}
 /* 
 input[data-error]::after {
     content: attr(data-error);
