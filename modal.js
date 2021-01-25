@@ -1,48 +1,29 @@
-function editNav() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
-  }
-}
-
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const close = document.querySelector(".close");
-const modalBtn = document.querySelectorAll(".modal-btn");
+const mainNavBar = document.querySelector(".main-navbar")
+const burgerIcon = document.querySelector(".icon")
+const modalBtn = document.querySelector(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalBody = document.querySelector(".modal-body");
-const form = document.querySelector("#form")
-const firstName = document.querySelector("input[name=first]")
-const lastName = document.querySelector("input[name=last]")
-const email = document.querySelector("input[name=email]")
-const birthdate = document.querySelector("input[name=birthdate]")
-const localisation = document.querySelectorAll("input[name=location]")
-const quantity = document.querySelector("input[name=quantity]")
-const terms = document.querySelector("input[name=user-condition]")
-let deleteMessage = document.querySelector(".confirmation-message")
+const form = document.forms["form"]
 
+//menu
+burgerIcon.addEventListener("click", menuOpen)
 
 // launch modal event
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
+modalBtn.addEventListener("click", launchModal);
 
 //form event
 if (form !== null) {
   form.addEventListener('submit', handleSubmit)
 }
-firstName.addEventListener('invalid', errorMessageFirstName)
-lastName.addEventListener('invalid', errorMessageLastName)
-email.addEventListener('invalid', errorMessageMail)
-birthdate.addEventListener('invalid', errorMessagePicker)
-localisation.forEach(item =>{
-  item.addEventListener('invalid', errorMessageLocation)
-})
-quantity.addEventListener('invalid', errorMessageQuantity)
-terms.addEventListener('invalid', errorMessageTermsChecked)
-
 //fonction creation d'element
-function createConfirmation(parent) {
+function insertAfter(newElement, reference) {
+  reference.parentNode.insertBefore(newElement, reference.nextSibling)
+}
+
+function createConfirmation(message, labelButton, parent) {
   let div = document.createElement("div")
   let closeButton = document.createElement("button")
   let messageApproved = document.createElement("p")
@@ -51,96 +32,118 @@ function createConfirmation(parent) {
   closeButton.classList.add("btn-submit", "button")
   messageApproved.classList.add("messageApproved")
 
-  messageApproved.innerHTML = "Merci ! Votre réservation a été reçue."
-  closeButton.innerHTML = "Fermer"
+  messageApproved.innerHTML = message
+  closeButton.innerHTML = labelButton
 
   div.prepend(messageApproved)
-  div.append(closeButton)
+  div.appendChild(closeButton)
 
-  parent.append(div)
+  parent.appendChild(div)
   closeModal(closeButton)
-  if (form === null) {
-    deleteMessage.remove()
-  }
 }
 
-function errorSpan(errorMessage) {
+//messages d'erreur des champs
+function errorSpan(errorMessage, afterElement) {
   let divError = document.createElement('div')
   divError.classList.add("error")
   divError.innerHTML = errorMessage
+  insertAfter(divError, afterElement)
 }
 
-//fonction des evenements
+//suppression du message d'erreur
+function isRemoved(element) {
+  if (document.querySelector(`.${element}`) !== null) {
+    document.querySelector(`.${element}`).remove()
+  }
+}
+
+//fonction de fermeture de la fenêtre
 function closeModal(button) {
   button.addEventListener('click', () => {
-    modalbg.style.display = "none"
-    form.style.display = 'block'
+    modalbg.classList.remove('showing')
+    modalbg.classList.add('hide')
+    isRemoved('error')
   })
 }
-function handleSubmit(e) {
+
+// launch modal form
+function launchModal() {
+  let confirmationMessage = document.querySelector(".confirmation-message")
+
+  modalbg.classList.remove("hide")
+  modalbg.classList.add("showing")
+  form.style.display = 'block'
+
+  if (confirmationMessage) {
+    confirmationMessage.remove()
+  }
+  closeModal(close)
+}
+
+//ouverture de menu
+function menuOpen() {
+  mainNavBar.classList.toggle("active-animation")
+}
+// fonction de soumission du formulaire
+async function handleSubmit(e) {
   e.preventDefault()
-  form.style.display = 'none'
-  createConfirmation(modalBody)
-}
-function errorMessageFirstName(e){
-  e.target.setCustomValidity('')
-  if (!e.target.validity.valid) {
-    if (e.target.value.length < 2) {
-      e.target.setCustomValidity('Veuillez entrer 2 caractères ou plus pour le champ nom.')
-    }
+
+  let input = this
+  let radio = document.querySelectorAll("input[name=location]:checked").length
+  let data = new FormData(input)
+
+  //suppression du message d'erreur en cas de spam click
+  isRemoved("error")
+
+  //messages d'erreur en cas d'invalidation du formulaire
+  if (input["first"].value.trim().length < 2 || input["first"].value.trim() === null) {
+    errorSpan("Veuillez entrer 2 caractères ou plus pour le champ prénom.", input["first"])
+
+  }else if (input["last"].value.trim().length < 2 || input["last"].value.trim() === null) {
+    errorSpan("Veuillez entrer 2 caractères ou plus pour le champ nom.", input["last"])
+
+  }else if (!input['email'].validity.valid) {
+    errorSpan("Veuillez entrer une adresse email valide.", input["email"])
+
+  }else if (input["birthdate"].value > "1998-12-31") {
+    errorSpan("Vous devez avoir 18 ans pour participer.", input["birthdate"])
+
+  }else if (!input["birthdate"].value) {
+    errorSpan("Vous devez indiquer votre date de naissance.", input["birthdate"])
+
+  }else if (!input["quantity"].value) {
+    errorSpan("Veuillez entrer un chiffre.", input["quantity"])
+
+  }else if (radio <= 0) {
+    errorSpan("Vous devez choisir une option.", document.querySelector(".checkboxes"))
+
+  }else if (!input["user-condition"].checked) {
+    errorSpan("Vous devez vérifier que vous acceptez les termes et conditions.", document.querySelector(".checkbox2-label"))
+
+  }else{
+    isRemoved("error")
+    input.style.display = 'none'
+    createConfirmation(
+      "Merci ! Votre réservation a été reçue.",
+      "Fermer",
+      modalBody
+    )
   }
-}
-function errorMessageLastName(e){
-  e.target.setCustomValidity('')
-  if (!e.target.validity.valid) {
-    if (e.target.value.length < 2) {
-      e.target.setCustomValidity('Veuillez entrer 2 caractères ou plus pour le champ nom.')
-    }
-  }
-}
-function errorMessageMail(e){
-  e.target.setCustomValidity('')
-  if (!e.target.validity.valid) {
-    if (e.target.value.length < 2) {
-      e.target.setCustomValidity("Veuillez entrer une adresse email valide.")
-    }
-  }
-}
-function errorMessagePicker(e){
-  e.target.setCustomValidity('')
-  if (!e.target.validity.valid) {
-    e.target.setCustomValidity("Vous devez entrer votre date de naissance.")
-  }
-}
-function errorMessageQuantity(e){
-  e.target.setCustomValidity('')
-  if (!e.target.validity.valid) {
-    if (e.target.value === null) {
-      e.target.setCustomValidity("Veuillez entrer un chiffre.")
-    }
-  }
-}
-function errorMessageLocation(e){
-  e.target.setCustomValidity('')
-  let isChecked = Array.prototype.slice.call(localisation).some(x => x.checked)
-  if (!e.target.validity.valid) {
-    if (!isChecked) {
-      e.target.setCustomValidity("Vous devez choisir une option.")
-    }
-  }
-}
-function errorMessageTermsChecked(e){
-  // e.target.setCustomValidity('')
-  // if (!e.target.validity.valid) {
-  //   if (!e.target.checked) {
-  //     e.target.setCustomValidity("Vous devez vérifier que vous acceptez les termes et conditions.")
+
+  // let getData = await fetch(input.getAttribute('action'),{
+  //   method:"POST",
+  //   body: data
+  // })
+  // if (getData.ok === true) {
+  //   let inputsData = form.querySelectorAll('input')
+  //   for (let i = 0; i <inputsData.length; i++) {
+  //     const element = inputsData[i];
+  //     if (element.value !== null) {
+        
+  //       console.log(element.value);
   //     }
+  //   }
   // }
 }
 
 
-// launch modal form
-function launchModal() {
-  modalbg.style.display = "block";
-  closeModal(close)
-}
