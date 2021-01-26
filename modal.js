@@ -22,7 +22,7 @@ if (form !== null) {
 function insertAfter(newElement, reference) {
   reference.parentNode.insertBefore(newElement, reference.nextSibling)
 }
-
+//message de confirmation
 function createConfirmation(message, labelButton, parent) {
   let div = document.createElement("div")
   let closeButton = document.createElement("button")

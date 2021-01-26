@@ -64,7 +64,6 @@ img {
   background: white;
   height: 1.7px;
   position: relative;
-  z-index: 1000;
 }
 main {
   font-weight: bolder;
@@ -111,9 +110,9 @@ main {
   background: #3876ac;
 }
 
-/* .smFont {
+.smFont {
   font-size: 16px;
-} */
+}
 
 .bground {
   position: fixed;
@@ -397,7 +396,7 @@ input {
   width: 75vmax;
 }
 .hero-text {
-  width: 31vw;
+  width: 29vw;
   font-weight: normal;
   padding: 0;
   position: absolute;
@@ -412,6 +411,7 @@ input {
   margin: 0;
   position: absolute;
   top: 85%;
+  z-index: auto;
 }
 .hero-img {
   width: 60%;
@@ -428,9 +428,7 @@ input {
   margin: 60px 0 30px;
   font-weight: bolder;
 }
-.hero-section > .btn-signup {
-  display: none;
-}
+
 footer {
   padding-left: 2vw;
   padding-right: 2vw;
@@ -440,10 +438,17 @@ footer {
 
 
 
-@media screen and (max-width: 1070px) {
+@media (max-width: 860px) {
   .topnav{
     margin: 6.5% auto 2%;
+    padding-top: 2%;
     width: 86%;
+    position: fixed;
+    top: -4%;
+    z-index: 1;
+    background: white;
+    width: 100%;
+    overflow: visible;
   }
   .topnav a {
     font-size: 4.5vmin;
@@ -452,12 +457,15 @@ footer {
     display: block;
     margin-top: 5px;
     font-size: 6vmin;
+    margin-right: 6%;
   }
   .header-logo{
     align-self: center;
+    margin-left: 8%;
   }
   .header-logo img {
     width: 35vmin;
+    padding: 0;
   }
   .main-navbar{
     display: flex;
@@ -465,8 +473,8 @@ footer {
     position: absolute;
     z-index: 100;
     background: white;
-    right: 10%;
-    top: 13%;
+    right: 8%;
+    top: 90%;
     border: 1px solid rgb(148, 148, 148);
     box-shadow: 3px 8px 10px 2px rgb(138, 138, 138);
     transform: translateY(-200%);
@@ -478,14 +486,12 @@ footer {
   .active-animation{
     animation: modalopen .5s cubic-bezier(0.445, 0.05, 0.55, 0.95) 0s 1 normal forwards;
   }
-  .main-navbar a {
-    display: block;
-  }
   .hero-section {
     display: block;
     box-shadow: unset;
     overflow: visible;
     padding: 0;
+    margin: 15vh 3vw;
   }
   .hero-content {
     background: #fff;
@@ -494,7 +500,11 @@ footer {
     padding:0 20px;
   }
   .hero-content .btn-signup {
-    display: none;
+    display: block;
+    /* top:184%;
+    right: 30%; */
+    margin: 114% 27%;
+    font-size: 1em;
   }
   .hero-headline {
     font-size: 3.5rem;
@@ -524,20 +534,31 @@ footer {
     font-size: 1em;
   }
   .content{
-    margin: 0;
+    margin: 18% auto 0;
     padding: 0;
     max-width: 100%;
   }
+  .bground{
+    z-index: 0;
+  }
   label{
-    font-size: 3vmin;
+    font-size: 3.5vmin;
   }
   .copyrights {
-    margin-top: 50px;
+    margin-top: 5%;
     text-align: center;
     font-size: 13px;
   }
 }
 
+@media (min-width: 500px){
+  .topnav{
+    margin: 3.5% auto 2% !important;
+  }
+  .hero-content .btn-signup{
+    margin: 100% 35% !important;
+  }
+}
 @keyframes modalopen {
   from {
     opacity: 0;
