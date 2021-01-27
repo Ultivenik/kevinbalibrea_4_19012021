@@ -155,6 +155,7 @@ label {
   font-weight: normal;
   display: inline-block;
   margin-bottom: 11px;
+  margin-top: 11px;
 }
 input {
   padding: 8px;
@@ -511,7 +512,7 @@ footer {
     margin: 5% auto;
   }
   .content{
-    margin: 18% auto 0;
+    margin: 17% auto 0;
     padding: 0;
     max-width: 100%;
   }

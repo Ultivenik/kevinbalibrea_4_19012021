@@ -51,10 +51,14 @@ function errorSpan(errorMessage, afterElement) {
 }
 
 //suppression du message d'erreur
-function isRemoved(element) {
-  if (document.querySelector(`.${element}`) !== null) {
-    document.querySelector(`.${element}`).remove()
-  }
+function isRemoved() {
+    let o = document.querySelectorAll(".formData")
+    o.forEach(item =>{
+    let error = document.querySelector(`.error`)
+      if (error) {
+        item.children[3].remove()
+      }
+  })
 }
 
 //fonction de fermeture de la fenêtre
@@ -62,7 +66,7 @@ function closeModal(button) {
   button.addEventListener('click', () => {
     modalbg.classList.remove('showing')
     modalbg.classList.add('hide')
-    isRemoved('error')
+    isRemoved()
   })
 }
 
@@ -85,42 +89,56 @@ function menuOpen() {
   mainNavBar.classList.toggle("active-animation")
 }
 // fonction de soumission du formulaire
-async function handleSubmit(e) {
+function handleSubmit(e) {
   e.preventDefault()
 
   let input = this
   let radio = document.querySelectorAll("input[name=location]:checked").length
+  validationError = false
 
   //suppression du message d'erreur en cas de spam click
-  isRemoved("error")
+  isRemoved()
 
   //messages d'erreur en cas d'invalidation du formulaire
   if (input["first"].value.trim().length < 2 || input["first"].value.trim() === null) {
     errorSpan("Veuillez entrer 2 caractères ou plus pour le champ prénom.", input["first"])
-
-  }else if (input["last"].value.trim().length < 2 || input["last"].value.trim() === null) {
+    validationError = true
+  }
+  if (input["last"].value.trim().length < 2 || input["last"].value.trim() === null) {
     errorSpan("Veuillez entrer 2 caractères ou plus pour le champ nom.", input["last"])
-
-  }else if (!input['email'].validity.valid) {
+    validationError = true
+  }
+  if (!input['email'].validity.valid) {
     errorSpan("Veuillez entrer une adresse email valide.", input["email"])
-
-  }else if (input["birthdate"].value > "1998-12-31") {
+    validationError = true
+  }
+  if (!input['email'].value) {
+    errorSpan("Veuillez remplir ce champ.", input["email"])
+    validationError = true
+  }
+  if (input["birthdate"].value > "1998-12-31") {
     errorSpan("Vous devez avoir 18 ans pour participer.", input["birthdate"])
-
-  }else if (!input["birthdate"].value) {
+    validationError = true
+  }
+  if (!input["birthdate"].value) {
     errorSpan("Vous devez indiquer votre date de naissance.", input["birthdate"])
-
-  }else if (!input["quantity"].value) {
+    validationError = true
+  }
+  if (!input["quantity"].value) {
     errorSpan("Veuillez entrer un chiffre.", input["quantity"])
-
-  }else if (radio <= 0) {
+    validationError = true
+  }
+  if (radio <= 0) {
     errorSpan("Vous devez choisir une option.", document.querySelector(".checkboxes"))
-
-  }else if (!input["user-condition"].checked) {
+    validationError = true
+  }
+  if (!input["user-condition"].checked) {
     errorSpan("Vous devez vérifier que vous acceptez les termes et conditions.", document.querySelector(".checkbox2-label"))
+    validationError = true
+  }
+  if(!validationError){
+    // isRemoved()
 
-  }else{
-    isRemoved("error")
     input.style.display = 'none'
     createConfirmation(
       "Merci ! Votre réservation a été reçue.",
