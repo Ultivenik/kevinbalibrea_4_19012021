@@ -90,7 +90,6 @@ async function handleSubmit(e) {
 
   let input = this
   let radio = document.querySelectorAll("input[name=location]:checked").length
-  let data = new FormData(input)
 
   //suppression du message d'erreur en cas de spam click
   isRemoved("error")
@@ -129,21 +128,6 @@ async function handleSubmit(e) {
       modalBody
     )
   }
-
-  // let getData = await fetch(input.getAttribute('action'),{
-  //   method:"POST",
-  //   body: data
-  // })
-  // if (getData.ok === true) {
-  //   let inputsData = form.querySelectorAll('input')
-  //   for (let i = 0; i <inputsData.length; i++) {
-  //     const element = inputsData[i];
-  //     if (element.value !== null) {
-        
-  //       console.log(element.value);
-  //     }
-  //   }
-  // }
 }
 
 
