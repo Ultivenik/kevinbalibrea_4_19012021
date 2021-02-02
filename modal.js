@@ -8,21 +8,21 @@ const formData = document.querySelectorAll(".formData");
 const modalBody = document.querySelector(".modal-body");
 const form = document.forms["form"]
 
+//EVENEMENTS
 //menu
 burgerIcon.addEventListener("click", menuOpen)
-
 // launch modal event
 modalBtn.addEventListener("click", launchModal);
-
 //form event
 if (form !== null) {
   form.addEventListener('submit', handleSubmit)
 }
 
-//fonction creation d'element
+//fonction d'insersion apres un element
 function insertAfter(newElement, reference) {
   reference.parentNode.insertBefore(newElement, reference.nextSibling)
 }
+
 //message de confirmation
 function createConfirmation(message, labelButton, parent) {
   let div = document.createElement("div")
@@ -89,6 +89,7 @@ function launchModal() {
 function menuOpen() {
   mainNavBar.classList.toggle("active-animation")
 }
+
 // fonction de soumission du formulaire
 function handleSubmit(e) {
   e.preventDefault()
