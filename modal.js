@@ -55,9 +55,9 @@ function isRemoved() {
     let o = document.querySelectorAll(".formData")
     o.forEach(item =>{
     let error = document.querySelector(`.error`)
-      if (error) {
-        item.children[3].remove()
-      }
+    if (item.contains(error)) {
+        error.remove()
+    }
   })
 }
 
@@ -128,23 +128,35 @@ function handleSubmit(e) {
     errorSpan("Veuillez entrer un chiffre.", input["quantity"])
     validationError = true
   }
+  if (input["quantity"].value < 0) {
+    errorSpan("Veuillez entrer un chiffre valide.", input["quantity"])
+    validationError = true
+  }
   if (radio <= 0) {
-    errorSpan("Vous devez choisir une option.", document.querySelector(".checkboxes"))
+    errorSpan("Vous devez choisir une option.", document.querySelector(".last-label"))
     validationError = true
   }
   if (!input["user-condition"].checked) {
     errorSpan("Vous devez vérifier que vous acceptez les termes et conditions.", document.querySelector(".checkbox2-label"))
     validationError = true
   }
-  if(!validationError){
-    // isRemoved()
 
+  //reset du formulaire et message de confirmation de l'envoi
+  if(validationError !== true){
     input.style.display = 'none'
     createConfirmation(
       "Merci ! Votre réservation a été reçue.",
       "Fermer",
       modalBody
     )
+    input["first"].value = null
+    input["last"].value = null
+    input['email'].value = null
+    input["birthdate"].value = null
+    input["quantity"].value = null
+    input["user-condition"].checked = false
+    input["newsletter"].checked = false
+    document.querySelector("input[name=location]:checked").checked = false
   }
 }
 
