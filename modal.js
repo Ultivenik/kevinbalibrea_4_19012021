@@ -18,6 +18,7 @@ modalBtn.addEventListener("click", launchModal);
 if (form !== null) {
   form.addEventListener('submit', handleSubmit)
 }
+
 //fonction creation d'element
 function insertAfter(newElement, reference) {
   reference.parentNode.insertBefore(newElement, reference.nextSibling)
